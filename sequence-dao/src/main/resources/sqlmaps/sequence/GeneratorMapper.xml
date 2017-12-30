@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.shaoyuanhu.dao.mapper.GeneratorMapper" >
+    <resultMap id="BaseResultMap" type="com.shaoyuanhu.domain.Generator" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="owner_key" property="ownerkey" jdbcType="VARCHAR" />
+        <result column="owner_name" property="ownername" jdbcType="VARCHAR" />
+        <result column="start_index" property="startindex" jdbcType="BIGINT" />
+        <result column="step" property="step" jdbcType="INTEGER" />
+        <result column="is_order" property="isorder" jdbcType="INTEGER" />
+        <result column="update_time" property="updatetime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, owner_key, owner_name, start_index, step, is_order, update_time
+    </sql>
+    <select id="getGeneratorByOwnerKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from generator
+        where owner_key = #{ownerkey,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getGeneratorList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from generator
+    </select>
+
+    <insert id="insert" parameterType="com.shaoyuanhu.domain.Generator" >
+        insert into generator (owner_key, owner_name,
+        start_index, step, is_order,
+        update_time)
+        values (#{ownerkey,jdbcType=VARCHAR}, #{ownername,jdbcType=VARCHAR},
+        #{startindex,jdbcType=BIGINT}, #{step,jdbcType=INTEGER}, #{isorder,jdbcType=INTEGER},
+        now())
+    </insert>
+
+    <update id="updateGenerator" parameterType="java.lang.String" >
+        UPDATE generator SET start_index= start_index + step , update_time =NOW()
+        WHERE owner_key=#{ownerkey,jdbcType=VARCHAR}
+    </update>
+</mapper>
